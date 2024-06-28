@@ -8,8 +8,7 @@ pub fn main() {
 
 pub fn extract_class_names_test() {
   let input =
-    "hek
-    let x = \"double_quote1\";
+    "let x = \"double_quote1\";
 
     let y = \"double_quote2
       double_quote3
