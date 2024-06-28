@@ -1,3 +1,5 @@
+import gleam/bool
+import gleam/int
 import gleam/io
 import gleam/list
 import gleam/string
@@ -7,7 +9,56 @@ pub fn main() {
 }
 
 pub fn extract_class_names(input: String) -> List(String) {
-  extract_class_names_recursive(input, [])
+  let delimiters: List(#(Int, String)) =
+    string.split(input, "")
+    |> list.index_map(fn(char, i) -> List(#(Int, String)) {
+      case char {
+        "\"" | "'" | "`" -> [#(i, char)]
+        _ -> []
+      }
+    })
+    |> list.flatten
+
+  list.each(delimiters, fn(x) -> Nil { io.println(x.0 |> int.to_string <> x.1) })
+
+  extract_indices_recursive([], delimiters, "")
+  |> list.map(int.to_string)
+  |> list.each(io.println)
+
+  []
+  // extract_class_names_recursive(input, [])
+}
+
+fn extract_indices_recursive(
+  accumulator: List(Int),
+  delimiters: List(#(Int, String)),
+  current: String,
+) -> List(Int) {
+  case delimiters {
+    [next_element, ..rest] -> {
+      let #(index, char) = next_element
+
+      case current {
+        "" -> {
+          let new_accumulator = list.append(accumulator, [index])
+          extract_indices_recursive(new_accumulator, rest, char)
+        }
+        _ -> {
+          io.println("current vs char vs del: " <> current <> "-" <> char)
+          case char == current {
+            True -> {
+              let new_accumulator = list.append(accumulator, [index])
+              extract_indices_recursive(new_accumulator, rest, "")
+            }
+            False -> {
+              extract_indices_recursive(accumulator, rest, current)
+            }
+          }
+        }
+      }
+    }
+    _ -> accumulator
+  }
 }
 
 fn extract_class_names_recursive(

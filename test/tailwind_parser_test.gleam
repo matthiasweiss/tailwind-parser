@@ -6,7 +6,7 @@ pub fn main() {
   gleeunit.main()
 }
 
-pub fn extract_class_names_test() {
+pub fn extract_class_names_test_tmp() {
   let input =
     "let x = \"double_quote1\";
 
@@ -25,12 +25,21 @@ pub fn extract_class_names_test() {
     let y = `backtick2
      backtick3
     backtick4`
+
+    let nested = \"[data-test='hello']\"
     "
 
   let expected_classes = [
     "double_quote1", "double_quote2", "double_quote3", "double_quote4",
     "single_quote1", "single_quote2", "single_quote3", "single_quote4",
-    "backtick1", "backtick2", "backtick3", "backtick4",
+    "backtick1", "backtick2", "backtick3", "backtick4", "[data-test='hello']",
   ]
+  extract_class_names(input) |> should.equal(expected_classes)
+}
+
+pub fn extract_class_names_test() {
+  let input = "let nested = \"[data-test='hello']\""
+
+  let expected_classes = ["[data-test='hello']"]
   extract_class_names(input) |> should.equal(expected_classes)
 }
