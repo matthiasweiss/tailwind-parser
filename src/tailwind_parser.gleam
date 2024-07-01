@@ -1,5 +1,3 @@
-import gleam/bool
-import gleam/int
 import gleam/io
 import gleam/list
 import gleam/string
@@ -18,15 +16,15 @@ fn extract(
   input: List(String),
   accumulator: List(String),
   current_word: String,
-  current_delimiter: String,
+  active_delimiter: String,
 ) -> List(String) {
   case input {
-    [next_element, ..rest] -> {
-      case current_delimiter {
+    [next_char, ..rest] -> {
+      case active_delimiter {
         "" -> {
-          case next_element {
+          case next_char {
             "\"" | "'" | "`" -> {
-              extract(rest, accumulator, current_word, next_element)
+              extract(rest, accumulator, current_word, next_char)
             }
             _ -> {
               extract(rest, accumulator, current_word, "")
@@ -34,27 +32,27 @@ fn extract(
           }
         }
         _ -> {
-          case next_element == current_delimiter {
+          case next_char == active_delimiter {
             True -> {
               let new_accumulator = list.append(accumulator, [current_word])
               extract(rest, new_accumulator, "", "")
             }
             False -> {
-              case next_element {
+              case next_char {
                 " " | "\n" -> {
                   case current_word {
                     "" -> {
-                      extract(rest, accumulator, "", current_delimiter)
+                      extract(rest, accumulator, "", active_delimiter)
                     }
                     _ -> {
                       let new_acc = list.append(accumulator, [current_word])
-                      extract(rest, new_acc, "", current_delimiter)
+                      extract(rest, new_acc, "", active_delimiter)
                     }
                   }
                 }
                 _ -> {
-                  let next_word = current_word <> next_element
-                  extract(rest, accumulator, next_word, current_delimiter)
+                  let next_word = current_word <> next_char
+                  extract(rest, accumulator, next_word, active_delimiter)
                 }
               }
             }
