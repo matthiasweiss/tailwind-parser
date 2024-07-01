@@ -6,7 +6,7 @@ pub fn main() {
   gleeunit.main()
 }
 
-pub fn extract_class_names_test_tmp() {
+pub fn extract_class_names_test() {
   let input =
     "let x = \"double_quote1\";
 
@@ -37,7 +37,7 @@ pub fn extract_class_names_test_tmp() {
   extract_class_names(input) |> should.equal(expected_classes)
 }
 
-pub fn extract_class_names_test() {
+pub fn extract_class_names_nested_delimiters_test() {
   let input = "let nested = \"[data-test='hello']\""
 
   let expected_classes = ["[data-test='hello']"]
