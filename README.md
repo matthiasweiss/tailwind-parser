@@ -2,6 +2,11 @@
 
 Tailwind class parser written in Gleam (WIP)
 
+Goal: 
+
+* extract tailwind classes of all files in a given directory
+* understand the concepts of Gleam
+
 ```sh
 gleam add tailwind_parser
 ```
